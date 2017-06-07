@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	
+	<context:annotation-config/>
+	
+	<context:component-scan base-package="jpa.hello.world"/>
+	
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+		
+		<bean id="myEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="punit"/>
+			<property name="dataSource" value="myDataSource"/>
+			<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+			<property name="jpaPropertyMap">
+				<map>
+					<entry key="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+					<entry key="hibernate.hbm2ddl.auto" value="none"/>
+					<entry key="hibernate.format_sql" value="true"></entry>
+				</map>
+			</property>
+		</bean>
+		
+		<bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+			<property name="showSql" value="true"></property>
+		</bean>
+		
+		<bean id="myTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+			<property name="entityManagerFactory" ref="myEntityManagerFactory"></property>
+		</bean>
+		
+		<tx:annotation-driven transaction-manager="myTransactionManager"/>
+		
+		<bean id="myDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="org.h2.Driver" />
+			<property name="url" value="jdbc:h2:file:C:/Users/gayathri.guttikonda/Desktop/Gayathri/Repository/SpringMvcJpa/src/main/resources/springJpa;MV_STORE=FALSE" />
+			<property name="username" value="root"></property>
+			<property name="password" value="password"></property>
+		</bean>
+	
+</beans>
